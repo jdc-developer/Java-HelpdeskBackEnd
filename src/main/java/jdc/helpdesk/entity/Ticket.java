@@ -37,7 +37,7 @@ public class Ticket {
 	
 	@Temporal(TemporalType.DATE)
 	@Column(name="DT_CREATED", nullable=false)
-	private Calendar dtCreated;
+	private Calendar date;
 	
 	@Column(name="CD_TITLE", nullable=false, length=200)
 	private String title;
@@ -80,12 +80,12 @@ public class Ticket {
 		this.user = user;
 	}
 
-	public Calendar getDtCreated() {
-		return dtCreated;
+	public Calendar getDate() {
+		return date;
 	}
 
-	public void setDtCreated(Calendar dtCreated) {
-		this.dtCreated = dtCreated;
+	public void setDate(Calendar date) {
+		this.date = date;
 	}
 
 	public String getTitle() {

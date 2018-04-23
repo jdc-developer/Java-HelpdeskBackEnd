@@ -25,10 +25,10 @@ public class User {
 	@Column(name="CD_USER")
 	private int id;
 	
-	@Column(name="DS_EMAIL", nullable=false, length=100)
+	@Column(name="DS_EMAIL", nullable=false, length=250)
 	private String email;
 	
-	@Column(name="DS_PASSWORD", nullable=false, length=50)
+	@Column(name="DS_PASSWORD", nullable=false, length=250)
 	private String password;
 	
 	@Column(name="DS_PROFILE", nullable=false)

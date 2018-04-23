@@ -1,5 +1,7 @@
 package jdc.helpdesk.security.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -51,5 +53,19 @@ public class AuthenticationRestController {
 		final User user = userService.findByEmail(authRequest.getEmail());
 		user.setPassword(null);
 		return ResponseEntity.ok(new CurrentUser(token, user));
+	}
+	
+	@PostMapping(value="/api/refresh")
+	public ResponseEntity<?> refreshAndGetAuthenticationToken(HttpServletRequest req) {
+		String token = req.getHeader("Authorization");
+		String username = jwtTokenUtil.getUsernameFromToken(token);
+		final User user = userService.findByEmail(username);
+		
+		if(jwtTokenUtil.canTokenBerefreshed(token)) {
+			String refreshedToken = jwtTokenUtil.refreshToken(token);
+			return ResponseEntity.ok(new CurrentUser(refreshedToken, user));
+		} else {
+			return ResponseEntity.badRequest().body(null);
+		}
 	}
 }

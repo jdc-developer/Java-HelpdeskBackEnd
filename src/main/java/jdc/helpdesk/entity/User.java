@@ -13,6 +13,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jdc.helpdesk.enums.Profile;
 
 @Entity
@@ -35,9 +37,11 @@ public class User {
 	private Profile profile;
 	
 	@OneToMany(mappedBy="user", cascade=CascadeType.PERSIST, fetch=FetchType.LAZY)
+	@JsonIgnore
 	private List<Ticket> tickets;
 	
 	@OneToMany(mappedBy="assignedUser", cascade=CascadeType.PERSIST, fetch=FetchType.LAZY)
+	@JsonIgnore
 	private List<Ticket> technicianTickets;
 	
 	@OneToMany(mappedBy="user", cascade=CascadeType.PERSIST, fetch=FetchType.LAZY)

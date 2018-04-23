@@ -167,7 +167,7 @@ public class TicketController {
 		Response<Page<Ticket>> response = new Response<Page<Ticket>>();
 		Page<Ticket> tickets = null;
 		User userRequest = userFromRequest(request);
-		if(userRequest.getProfile().equals(Profile.ROLE_TECHINICIAN)) {
+		if(userRequest.getProfile().equals(Profile.ROLE_TECHNICIAN)) {
 			tickets = ticketService.listTicket(page, count);
 		} else if (userRequest.getProfile().equals(Profile.ROLE_CLIENT)) {
 			tickets = ticketService.findByCurrentUser(page, count, userRequest.getId());
@@ -176,7 +176,7 @@ public class TicketController {
 		return ResponseEntity.ok(response);
 	}
 	
-	@GetMapping(value="{page}/{count}/{number}/{title}/{status}/{priority}/{assignedUser}")
+	@GetMapping(value="{page}/{count}/{number}/{title}/{status}/{priority}") ///{assignedUser}")
 	@PreAuthorize("hasAnyRole('CLIENT', 'TECHNICIAN')")
 	public ResponseEntity<Response<Page<Ticket>>> findByParameters(HttpServletRequest request, 
 			@PathVariable("page") int page, 
@@ -184,8 +184,8 @@ public class TicketController {
 			@PathVariable("number") int number,
 			@PathVariable("title") String title,
 			@PathVariable("status") String status,
-			@PathVariable("priority") String priority,
-			@PathVariable("assignedUser") boolean assignedUser) {
+			@PathVariable("priority") String priority){
+			//@PathVariable("assignedUser") boolean assignedUser) {
 		title = title.equals("uninformed") ? "" : title;
 		status = status.equals("uninformed") ? "" : status;
 		priority = priority.equals("uninformed") ? "" : priority;
@@ -196,12 +196,12 @@ public class TicketController {
 			tickets = ticketService.findByNumber(page, count, number);
 		} else {
 			User userRequest = userFromRequest(request);
-			if(userRequest.getProfile().equals(Profile.ROLE_TECHINICIAN)) {
-				if(assignedUser) {
-					tickets = ticketService.findByParameterAndAssignedUser(page, count, title, status, priority, userRequest.getId());
-				} else {
+			if(userRequest.getProfile().equals(Profile.ROLE_TECHNICIAN)) {
+				//if(assignedUser) {
+					//tickets = ticketService.findByParameterAndAssignedUser(page, count, title, status, priority, userRequest.getId());
+				//} else {
 					tickets = ticketService.findByParameters(page, count, title, status, priority);
-				}
+				//}
 			} else if(userRequest.getProfile().equals(Profile.ROLE_CLIENT)) {
 				tickets = ticketService.findByParametersAndCurrentUser(page, count, title, status, priority, userRequest.getId());
 			}

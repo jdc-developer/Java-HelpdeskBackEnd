@@ -28,7 +28,7 @@ public class JavaHelpdeskBackEndApplication {
 		User admin = new User();
 		admin.setEmail("admin@helpdesk.com");
 		admin.setPassword(encoder.encode("123456"));
-		admin.setProfile(Profile.ADMIN);
+		admin.setProfile(Profile.ROLE_ADMIN);
 		
 		User find = repository.findByEmailIgnoreCaseContaining("admin@helpdesk.com");
 		if(find == null) {

@@ -124,7 +124,7 @@ public class UserController {
 	
 	@GetMapping(value="{page}/{count}")
 	@PreAuthorize("hasAnyRole('ADMIN')")
-	public ResponseEntity<Response<Page<User>>> findAll(@PathVariable int page, @PathVariable int count) {
+	public ResponseEntity<Response<Page<User>>> findAll(@PathVariable("page") int page, @PathVariable("count") int count) {
 		Response<Page<User>> response = new Response<Page<User>>();
 		Page<User> users = service.findAll(page, count);
 		response.setData(users);

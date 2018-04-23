@@ -1,5 +1,5 @@
 package jdc.helpdesk.enums;
 
 public enum Profile {
-	ADMIN, CLIENT, TECHINICIAN
+	ROLE_ADMIN, ROLE_CLIENT, ROLE_TECHINICIAN
 }

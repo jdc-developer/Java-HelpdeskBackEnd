@@ -6,5 +6,5 @@ import jdc.helpdesk.entity.ChangeStatus;
 
 public interface ChangeStatusRepository extends CrudRepository<ChangeStatus, Integer>{
 
-	Iterable<ChangeStatus> findByTicketIdOrderByDtChanged(String ticketId);
+	Iterable<ChangeStatus> findByTicketIdOrderByDtChangedDesc(int ticketId);
 }

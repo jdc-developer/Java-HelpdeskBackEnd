@@ -8,16 +8,18 @@ import jdc.helpdesk.entity.Ticket;
 
 public interface TicketRepository extends CrudRepository<Ticket, Integer>{
 
-	Page<Ticket> findByUserIdOrderByDateDesc(String userId, Pageable pages);
+	Page<Ticket> findByUserIdOrderByDateDesc(int userId, Pageable pages);
 	
 	Page<Ticket> findByTitleIgnoreCaseContainingAndStatusAndPriorityOrderByDateDesc(
 			String title, String status, String priority, Pageable pages);
 	
 	Page<Ticket> findByTitleIgnoreCaseContainingAndStatusAndPriorityAndUserIdOrderByDateDesc(
-			String title, String status, String priority, String userId, Pageable pages);
+			String title, String status, String priority, int userId, Pageable pages);
 	
 	Page<Ticket> findByTitleIgnoreCaseContainingAndStatusAndPriorityAndAssignedUserIdOrderByDateDesc(
-			String title, String status, String priority, String assignedId, Pageable pages);
+			String title, String status, String priority, int assignedUserId, Pageable pages);
 	
 	Page<Ticket> findByNumber(Integer number, Pageable pages);
+	
+	Page<Ticket> findAll(Pageable pageable);
 }

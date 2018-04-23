@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jdc.helpdesk.dto.Summary;
 import jdc.helpdesk.entity.ChangeStatus;
 import jdc.helpdesk.entity.Ticket;
 import jdc.helpdesk.entity.User;
@@ -206,6 +207,97 @@ public class TicketController {
 			}
 		}
 		response.setData(tickets);
+		return ResponseEntity.ok(response);
+	}
+	
+	@PutMapping(value="{id}/{status}")
+	@PreAuthorize("hasAnyRole('CLIENT', 'TECHNICIAN')")
+	public ResponseEntity<Response<Ticket>> changeStatus(HttpServletRequest request, 
+			@PathVariable("id") int id, 
+			@PathVariable("status") String status,
+			@RequestBody Ticket ticket, 
+			BindingResult result){
+		Response<Ticket> response = new Response<Ticket>();
+		try {
+			validateChangeStatus(id, status, result);
+			if(result.hasErrors()) {
+				result.getAllErrors().forEach(error -> response.getErrors().add(error.getDefaultMessage()));
+				return ResponseEntity.badRequest().body(response);
+			}
+			Optional<Ticket> ticketCurrent = ticketService.findById(id);
+			ticketCurrent.get().setStatus(Status.getStatus(status));
+			if(status.equals("Assigned")) {
+				ticketCurrent.get().setAssignedUser(userFromRequest(request));
+			}
+			Ticket ticketPersisted = (Ticket) ticketService.createOrUpdate(ticket);
+			ChangeStatus changeStatus = new ChangeStatus();
+			changeStatus.setUser(userFromRequest(request));
+			changeStatus.setDtChanged(Calendar.getInstance());
+			changeStatus.setStatus(Status.getStatus(status));
+			changeStatus.setTicket(ticketPersisted);
+			ticketService.createChangeStatus(changeStatus);
+			response.setData(ticketPersisted);
+		} catch(Exception e) {
+			response.getErrors().add(e.getMessage());
+			return ResponseEntity.badRequest().body(response);
+		}
+		return ResponseEntity.ok(response);
+	}
+	
+	private void validateChangeStatus(int id, String status, BindingResult result) {
+		if(id == 0) {
+			result.addError(new ObjectError("Ticket", "Id não informado"));
+		}
+		if(status == null || status.isEmpty()) {
+			result.addError(new ObjectError("Ticket", "Status obrigatório"));
+		}
+	}
+	
+	@GetMapping(value="/summary")
+	public ResponseEntity<Response<Summary>> findSummary() {
+		Response<Summary> response = new Response<Summary>();
+		Summary summary = new Summary();
+		int amountNew = 0;
+		int amountResolved = 0;
+		int amountApproved = 0;
+		int amountDisapproved = 0;
+		int amountAssigned = 0;
+		int amountClosed = 0;
+		
+		Iterable<Ticket> tickets = ticketService.findAll();
+		
+		if(tickets != null) {
+			for (Iterator<Ticket> iterator = tickets.iterator(); iterator.hasNext();) {
+				Ticket ticket = (Ticket) iterator.next();
+				if(ticket.getStatus().equals(Status.NEW)) {
+					amountNew++;
+				}
+				if(ticket.getStatus().equals(Status.RESOLVED)) {
+					amountResolved++;
+				}
+				if(ticket.getStatus().equals(Status.APPROVED)) {
+					amountApproved++;
+				}
+				if(ticket.getStatus().equals(Status.DISAPPROVED)) {
+					amountDisapproved++;
+				}
+				if(ticket.getStatus().equals(Status.ASSIGNED)) {
+					amountAssigned++;
+				}
+				if(ticket.getStatus().equals(Status.CLOSED)) {
+					amountClosed++;
+				}
+			}
+		}
+		summary.setAmountApproved(amountApproved);
+		summary.setAmountAssigned(amountAssigned);
+		summary.setAmountClosed(amountClosed);
+		summary.setAmountDisapproved(amountDisapproved);
+		summary.setAmountNew(amountNew);
+		summary.setAmountResolved(amountResolved);
+		
+		response.setData(summary);
+		
 		return ResponseEntity.ok(response);
 	}
 }

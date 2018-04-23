@@ -14,6 +14,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import jdc.helpdesk.enums.Status;
+
 @Entity
 @Table(name="T_HD_CHANGE_STATUS")
 @SequenceGenerator(name="seqStatus", sequenceName="SQ_HD_CHANGE_STATUS", allocationSize=1)
@@ -35,6 +37,17 @@ public class ChangeStatus {
 	@Temporal(TemporalType.DATE)
 	@Column(name="DT_CHANGED")
 	private Calendar dtChanged;
+	
+	@Column(name="DS_STATUS")
+	private Status status;
+
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
+	}
 
 	public int getId() {
 		return id;

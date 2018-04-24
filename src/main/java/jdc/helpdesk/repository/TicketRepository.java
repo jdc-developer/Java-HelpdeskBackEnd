@@ -5,19 +5,21 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
 
 import jdc.helpdesk.entity.Ticket;
+import jdc.helpdesk.enums.Priority;
+import jdc.helpdesk.enums.Status;
 
 public interface TicketRepository extends CrudRepository<Ticket, Integer>{
 
 	Page<Ticket> findByUserIdOrderByDateDesc(int userId, Pageable pages);
 	
 	Page<Ticket> findByTitleIgnoreCaseContainingAndStatusAndPriorityOrderByDateDesc(
-			String title, String status, String priority, Pageable pages);
+			String title, Status status, Priority priority, Pageable pages);
 	
 	Page<Ticket> findByTitleIgnoreCaseContainingAndStatusAndPriorityAndUserIdOrderByDateDesc(
-			String title, String status, String priority, int userId, Pageable pages);
+			String title, Status status, Priority priority, int userId, Pageable pages);
 	
 	Page<Ticket> findByTitleIgnoreCaseContainingAndStatusAndPriorityAndAssignedUserIdOrderByDateDesc(
-			String title, String status, String priority, int assignedUserId, Pageable pages);
+			String title, Status status, Priority priority, int assignedUserId, Pageable pages);
 	
 	Page<Ticket> findByNumber(Integer number, Pageable pages);
 	

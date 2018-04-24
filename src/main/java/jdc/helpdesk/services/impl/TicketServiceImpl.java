@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 import jdc.helpdesk.entity.ChangeStatus;
 import jdc.helpdesk.entity.Ticket;
+import jdc.helpdesk.enums.Priority;
+import jdc.helpdesk.enums.Status;
 import jdc.helpdesk.repository.ChangeStatusRepository;
 import jdc.helpdesk.repository.TicketRepository;
 import jdc.helpdesk.services.TicketService;
@@ -61,14 +63,14 @@ public class TicketServiceImpl implements TicketService{
 	}
 
 	@Override
-	public Page<Ticket> findByParameters(int page, int count, String title, String status, String priority) {
+	public Page<Ticket> findByParameters(int page, int count, String title, Status status, Priority priority) {
 		Pageable pages = PageRequest.of(page, count);
 		return this.ticketRep.findByTitleIgnoreCaseContainingAndStatusAndPriorityOrderByDateDesc(title, status, priority, pages);
 	}
 
 	@Override
-	public Page<Ticket> findByParametersAndCurrentUser(int page, int count, String title, String status,
-			String priority, int userId) {
+	public Page<Ticket> findByParametersAndCurrentUser(int page, int count, String title, Status status,
+			Priority priority, int userId) {
 		Pageable pages = PageRequest.of(page, count);
 		return this.ticketRep.findByTitleIgnoreCaseContainingAndStatusAndPriorityAndUserIdOrderByDateDesc(title, status, priority, userId, pages);
 	}
@@ -85,8 +87,8 @@ public class TicketServiceImpl implements TicketService{
 	}
 
 	@Override
-	public Page<Ticket> findByParameterAndAssignedUser(int page, int count, String title, String status,
-			String priority, int assignedUserId) {
+	public Page<Ticket> findByParameterAndAssignedUser(int page, int count, String title, Status status,
+			Priority priority, int assignedUserId) {
 		Pageable pages = PageRequest.of(page, count);
 		return this.ticketRep.findByTitleIgnoreCaseContainingAndStatusAndPriorityAndAssignedUserIdOrderByDateDesc(title, status, priority, assignedUserId, pages);
 	}

@@ -29,6 +29,7 @@ import jdc.helpdesk.dto.Summary;
 import jdc.helpdesk.entity.ChangeStatus;
 import jdc.helpdesk.entity.Ticket;
 import jdc.helpdesk.entity.User;
+import jdc.helpdesk.enums.Priority;
 import jdc.helpdesk.enums.Profile;
 import jdc.helpdesk.enums.Status;
 import jdc.helpdesk.response.Response;
@@ -176,7 +177,7 @@ public class TicketController {
 		return ResponseEntity.ok(response);
 	}
 	
-	@GetMapping(value="{page}/{count}/{number}/{title}/{status}/{priority}") ///{assignedUser}")
+	@GetMapping(value="{page}/{count}/{number}/{title}/{status}/{priority}/{assignedUser}")
 	@PreAuthorize("hasAnyRole('CLIENT', 'TECHNICIAN')")
 	public ResponseEntity<Response<Page<Ticket>>> findByParameters(HttpServletRequest request, 
 			@PathVariable("page") int page, 
@@ -184,8 +185,8 @@ public class TicketController {
 			@PathVariable("number") int number,
 			@PathVariable("title") String title,
 			@PathVariable("status") String status,
-			@PathVariable("priority") String priority){
-			//@PathVariable("assignedUser") boolean assignedUser) {
+			@PathVariable("priority") String priority,
+			@PathVariable("assignedUser") boolean assignedUser) {
 		title = title.equals("uninformed") ? "" : title;
 		status = status.equals("uninformed") ? "" : status;
 		priority = priority.equals("uninformed") ? "" : priority;
@@ -197,13 +198,13 @@ public class TicketController {
 		} else {
 			User userRequest = userFromRequest(request);
 			if(userRequest.getProfile().equals(Profile.ROLE_TECHNICIAN)) {
-				//if(assignedUser) {
-					//tickets = ticketService.findByParameterAndAssignedUser(page, count, title, status, priority, userRequest.getId());
-				//} else {
-					tickets = ticketService.findByParameters(page, count, title, status, priority);
-				//}
+				if(assignedUser) {
+					tickets = ticketService.findByParameterAndAssignedUser(page, count, title, Status.getStatus(status), Priority.getPriority(priority), userRequest.getId());
+				} else {
+					tickets = ticketService.findByParameters(page, count, title, Status.getStatus(status), Priority.getPriority(priority));
+				}
 			} else if(userRequest.getProfile().equals(Profile.ROLE_CLIENT)) {
-				tickets = ticketService.findByParametersAndCurrentUser(page, count, title, status, priority, userRequest.getId());
+				tickets = ticketService.findByParametersAndCurrentUser(page, count, title, Status.getStatus(status), Priority.getPriority(priority), userRequest.getId());
 			}
 		}
 		response.setData(tickets);
@@ -229,7 +230,7 @@ public class TicketController {
 			if(status.equals("Assigned")) {
 				ticketCurrent.get().setAssignedUser(userFromRequest(request));
 			}
-			Ticket ticketPersisted = (Ticket) ticketService.createOrUpdate(ticket);
+			Ticket ticketPersisted = (Ticket) ticketService.createOrUpdate(ticketCurrent.get());
 			ChangeStatus changeStatus = new ChangeStatus();
 			changeStatus.setUser(userFromRequest(request));
 			changeStatus.setDtChanged(Calendar.getInstance());

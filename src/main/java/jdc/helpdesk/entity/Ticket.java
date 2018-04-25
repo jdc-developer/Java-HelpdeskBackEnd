@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
@@ -59,7 +60,8 @@ public class Ticket {
 	private String description;
 	
 	@Column(name="DS_IMAGE")
-	private String image;
+	@Lob
+	private byte[] image;
 	
 	@OneToMany(mappedBy="ticket", cascade=CascadeType.PERSIST, fetch=FetchType.LAZY)
 	private List<ChangeStatus> changes;
@@ -136,11 +138,11 @@ public class Ticket {
 		this.description = description;
 	}
 
-	public String getImage() {
+	public byte[] getImage() {
 		return image;
 	}
 
-	public void setImage(String image) {
+	public void setImage(byte[] image) {
 		this.image = image;
 	}
 

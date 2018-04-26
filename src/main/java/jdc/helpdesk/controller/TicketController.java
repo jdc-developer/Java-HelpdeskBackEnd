@@ -227,7 +227,7 @@ public class TicketController {
 			}
 			Optional<Ticket> ticketCurrent = ticketService.findById(id);
 			ticketCurrent.get().setStatus(Status.getStatus(status));
-			if(status.equals("Assigned")) {
+			if(status.equals("ASSIGNED")) {
 				ticketCurrent.get().setAssignedUser(userFromRequest(request));
 			}
 			Ticket ticketPersisted = (Ticket) ticketService.createOrUpdate(ticketCurrent.get());

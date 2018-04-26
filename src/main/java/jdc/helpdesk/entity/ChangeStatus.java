@@ -14,6 +14,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jdc.helpdesk.enums.Status;
 
 @Entity
@@ -28,6 +30,7 @@ public class ChangeStatus {
 	
 	@ManyToOne
 	@JoinColumn(name="CD_TICKET")
+	@JsonIgnore
 	private Ticket ticket;
 	
 	@ManyToOne

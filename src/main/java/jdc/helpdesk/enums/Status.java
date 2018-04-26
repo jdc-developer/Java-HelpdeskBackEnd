@@ -11,7 +11,7 @@ public enum Status {
 		case "APPROVED": return APPROVED;
 		case "DISAPPROVED": return DISAPPROVED;
 		case "CLOSED": return CLOSED;
-		default: return NEW;
+		default: return null;
 		}
 	}
 }

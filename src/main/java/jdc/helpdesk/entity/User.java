@@ -45,6 +45,7 @@ public class User {
 	private List<Ticket> technicianTickets;
 	
 	@OneToMany(mappedBy="user", cascade=CascadeType.PERSIST, fetch=FetchType.LAZY)
+	@JsonIgnore
 	private List<ChangeStatus> changes;
 
 	public int getId() {

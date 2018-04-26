@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 
 import jdc.helpdesk.entity.ChangeStatus;
 import jdc.helpdesk.entity.Ticket;
+import jdc.helpdesk.enums.Priority;
+import jdc.helpdesk.enums.Status;
 
 @Component
 public interface TicketService {
@@ -25,13 +27,13 @@ public interface TicketService {
 	
 	Page<Ticket> findByCurrentUser(int page, int count, int userId);
 	
-	Page<Ticket> findByParameters(int page, int count, String title, String status, String priority);
+	Page<Ticket> findByParameters(int page, int count, String title, Status status, Priority priority);
 	
-	Page<Ticket> findByParametersAndCurrentUser(int page, int count, String title, String status, String priority, int userId);
+	Page<Ticket> findByParametersAndCurrentUser(int page, int count, String title, Status status, Priority priority, int userId);
 	
 	Page<Ticket> findByNumber(int page, int count, Integer number);
 	
 	Iterable<Ticket> findAll();
 	
-	Page<Ticket> findByParameterAndAssignedUser(int page, int count, String title, String status, String priority, int assignedUserId);
+	Page<Ticket> findByParameterAndAssignedUser(int page, int count, String title, Status status, Priority priority, int assignedUserId);
 }

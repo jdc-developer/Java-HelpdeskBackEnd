@@ -61,7 +61,7 @@ public class Ticket {
 	private String description;
 	
 	@Column(name="DS_IMAGE")
-	private String image;
+	private byte[] image;
 	
 	@OneToMany(mappedBy="ticket", cascade=CascadeType.PERSIST, fetch=FetchType.LAZY)
 	@JsonIgnore
@@ -139,11 +139,11 @@ public class Ticket {
 		this.description = description;
 	}
 
-	public String getImage() {
+	public byte[] getImage() {
 		return image;
 	}
 
-	public void setImage(String image) {
+	public void setImage(byte[] image) {
 		this.image = image;
 	}
 
